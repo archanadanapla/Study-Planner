@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Smart Study Planner</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f2f5ff;
+            margin: 0;
+            padding: 30px;
+        }
+
+        .box {
+            max-width: 600px;
+            margin: auto;
+            background: white;
+            padding: 25px;
+            border-radius: 15px;
+        }
+
+        h1 {
+            text-align: center;
+        }
+
+        .input-area {
+            display: flex;
+            gap: 10px;
+        }
+
+        input[type="text"] {
+            flex: 1;
+            padding: 12px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+        }
+
+        button {
+            padding: 12px 15px;
+            border: none;
+            border-radius: 8px;
+            background: #4f46e5;
+            color: white;
+            cursor: pointer;
+        }
+
+        .task {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: #f3f4f6;
+            padding: 12px;
+            margin-top: 10px;
+            border-radius: 8px;
+        }
+
+        .task span {
+            flex: 1;
+        }
+
+        .done {
+            text-decoration: line-through;
+            color: gray;
+        }
+
+        .delete {
+            background: #e53935;
+        }
+
+        .progress {
+            margin-top: 25px;
+            padding: 15px;
+            background: #eef2ff;
+            border-radius: 10px;
+        }
+
+        @media (max-width: 600px) {
+            .input-area {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="box">
+
+    <h1>📚 Smart Study Planner</h1>
+
+    <p>Plan your studies and track your progress.</p>
+
+    <div class="input-area">
+
+        <input
+            type="text"
+            id="taskInput"
+            placeholder="Enter your study task"
+        >
+
+        <button onclick="addTask()">Add Task</button>
+
+    </div>
+
+    <h2>📋 My Tasks</h2>
+
+    <div id="taskList"></div>
+
+    <div class="progress">
+
+        <h3>📊 Progress</h3>
+
+        <p id="progressText">
+            0 / 0 completed
+        </p>
+
+    </div>
+
+</div>
+
+
+<script>
+
+    // Store tasks
+    let tasks = [];
+
+
+    // Add a new task
+    function addTask() {
+
+        let input = document.getElementById("taskInput");
+
+        let taskText = input.value.trim();
+
+
+        // Check empty input
+        if (taskText === "") {
+
+            alert("Please enter a task!");
+
+            return;
+        }
+
+
+        // Create task
+        let task = {
+
+            text: taskText,
+
+            completed: false
+
+        };
+
+
+        // Add task
+        tasks.push(task);
+
+
+        // Clear input
+        input.value = "";
+
+
+        // Show tasks
+        displayTasks();
+    }
+
+
+    // Display all tasks
+    function displayTasks() {
+
+        let taskList = document.getElementById("taskList");
+
+
+        // Clear previous list
+        taskList.innerHTML = "";
+
+
+        // Create every task
+        for (let i = 0; i < tasks.length; i++) {
+
+            let task = tasks[i];
+
+
+            // Create task container
+            let div = document.createElement("div");
+
+            div.className = "task";
+
+
+            // Checkbox
+            let checkbox = document.createElement("input");
+
+            checkbox.type = "checkbox";
+
+            checkbox.checked = task.completed;
+
+
+            checkbox.onclick = function() {
+
+                tasks[i].completed = checkbox.checked;
+
+                displayTasks();
+
+            };
+
+
+            // Task text
+            let span = document.createElement("span");
+
+            span.innerText = task.text;
+
+
+            // Completed style
+            if (task.completed) {
+
+                span.className = "done";
+
+            }
+
+
+            // Delete button
+            let deleteButton = document.createElement("button");
+
+            deleteButton.innerText = "Delete";
+
+            deleteButton.className = "delete";
+
+
+            deleteButton.onclick = function() {
+
+                tasks.splice(i, 1);
+
+                displayTasks();
+
+            };
+
+
+            // Add elements
+            div.appendChild(checkbox);
+
+            div.appendChild(span);
+
+            div.appendChild(deleteButton);
+
+
+            taskList.appendChild(div);
+
+        }
+
+
+        updateProgress();
+
+    }
+
+
+    // Update progress
+    function updateProgress() {
+
+        let total = tasks.length;
+
+        let completed = 0;
+
+
+        for (let i = 0; i < tasks.length; i++) {
+
+            if (tasks[i].completed) {
+
+                completed++;
+
+            }
+
+        }
+
+
+        document.getElementById("progressText").innerText =
+
+            completed + " / " + total + " completed";
+
+    }
+
+
+    // Press Enter to add task
+    document.getElementById("taskInput").addEventListener(
+
+        "keydown",
+
+        function(event) {
+
+            if (event.key === "Enter") {
+
+                addTask();
+
+            }
+
+        }
+
+    );
+
+</script>
+
+</body>
+</html>
